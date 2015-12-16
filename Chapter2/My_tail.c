@@ -21,13 +21,17 @@ int main(int argc,char *argv[])
 
     char buf[OFFSET_SIZE];
 
+    lseek(fd,-OFFSET_SIZE,SEEK_END);
     read(fd,buf,OFFSET_SIZE);
+
+    int is_start = 0;
     for(int i=0;i<OFFSET_SIZE;++i){
-        if(i>=100 && buf[i] == '\n'){
-            printf("%c",buf[i]);
-            break;
+        if(!is_start && buf[i] == '\n'){
+            is_start = 1;
         }
-        printf("%c",buf[i]);
+        if(is_start){
+            printf("%c",buf[i]);
+        }
     }
 
     close(fd);
