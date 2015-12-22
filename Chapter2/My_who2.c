@@ -31,7 +31,6 @@ int main(int argc,char **argv)
 {
 	struct utmp *cur_utmp;
 
-
 	if(utmp_open(UTMP_FILE) == -1){
 		perror(UTMP_FILE);
 		exit(1);
