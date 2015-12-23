@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 
-#define OFFSET_SIZE 400
-#define READ_SIZE sizeof(char)
+#define BUFF_SIZE 4096
 
 int main(int argc,char *argv[])
 {
@@ -19,21 +19,22 @@ int main(int argc,char *argv[])
         exit(1);
     }
 
-    char buf[OFFSET_SIZE];
+    char buf[BUFF_SIZE];
+    while(read(fd,buf,BUFF_SIZE));
+    close(fd);
 
-    lseek(fd,-OFFSET_SIZE,SEEK_END);
-    read(fd,buf,OFFSET_SIZE);
-
-    int is_start = 0;
-    for(int i=0;i<OFFSET_SIZE;++i){
-        if(!is_start && buf[i] == '\n'){
-            is_start = 1;
-        }
-        if(is_start){
-            printf("%c",buf[i]);
+    int start_n = 0,count = 0;
+    for(int i = 0;i<strlen(buf) && count != 10;++i){
+        if(buf[i] == '\n' && count != 10){
+            start_n = i;
+            ++count;
         }
     }
 
-    close(fd);
+    for(int i = start_n;i<strlen(buf);++i){
+        printf("%c",buf[i]);
+    }
+
+
     return 0;
 }
